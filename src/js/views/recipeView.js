@@ -1,6 +1,7 @@
-//Importing icons
-import icons from 'url:../../img/icons.svg'; // Parcel 2
+//Importing icons:Parcel 2 way of importing images
+import icons from 'url:../../img/icons.svg';
 
+//Use this to convert the decimal numbers to fractions
 import { Fraction } from 'fractional';
 
 class RecipeView {
@@ -27,6 +28,7 @@ class RecipeView {
     this.#parentElement.insertAdjacentHTML('afterbegin', markup);
   };
 
+  //Generating the markup for the recipe
   #generateMarkup() {
     return `
     <figure class="recipe__fig">
@@ -113,10 +115,12 @@ class RecipeView {
         </div>`;
   }
 
+  //Clearing the recipe text before rendering the spinner.
   #clear() {
     this.#parentElement.innerHTML = '';
   }
 
+  //Generating the markup for the ingredients
   #generateMarkupIngredient(ing) {
     return `
       <li class="recipe__ingredient">
@@ -134,4 +138,5 @@ class RecipeView {
   }
 }
 
+//Exporting an instance of the class
 export default new RecipeView();
