@@ -33,5 +33,10 @@ const controlRecipes = async function () {
   }
 };
 
-//Adding event listener to the window
-['hashchange', 'load'].forEach(e => window.addEventListener(e, controlRecipes));
+//Publisher subscriber pattern.
+const init = function () {
+  recipeView.addHandlerRender(controlRecipes);
+};
+
+//subscribing to the hashchange and load events
+init();
