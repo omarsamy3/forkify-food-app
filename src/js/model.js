@@ -1,5 +1,6 @@
 //import the api url
 import { API_URL } from './config.js';
+import { RES_PER_PAGE } from './config.js';
 //import the getJSON function
 import { getJSON } from './views/helpers.js';
 
@@ -8,6 +9,9 @@ export const state = {
   search: {
     query: '',
     results: [],
+    page: 1,
+    ressultsPerPage: RES_PER_PAGE,
+    pagesNumbers: 1,
   },
 };
 
@@ -49,4 +53,22 @@ export const loadSearchResults = async function (query) {
   } catch (err) {
     throw err;
   }
+};
+
+//Get recipes chunk, from the page number
+export const getSearchResultsPage = function (page = state.search.page) {
+  //store the current page
+  state.search.page = page;
+
+  //Store the pages number.
+  state.search.pagesNumbers = Math.ceil(
+    state.search.results.length / state.search.ressultsPerPage
+  );
+
+  //Get the boundries of the page.
+  const start = (page - 1) * state.search.ressultsPerPage;
+  const end = page * state.search.ressultsPerPage;
+
+  //Return the page results.
+  return state.search.results.slice(start, end);
 };

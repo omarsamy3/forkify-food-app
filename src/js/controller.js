@@ -4,13 +4,15 @@ import * as model from './model.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
 import resultsView from './views/resultsView.js';
+import paginationView from './views/paginationView.js';
 
 import 'core-js/stable'; // Polyfilling everything (to support older browsers)
 import 'regenerator-runtime/runtime'; // Polyfilling async await
+import { async } from 'regenerator-runtime';
 
-if (module.hot) {
-  module.hot.accept();
-}
+// if (module.hot) {
+//   module.hot.accept();
+// }
 
 //Function to load the choosen recipe.
 const controlRecipes = async function () {
@@ -47,13 +49,25 @@ const controlSearchResults = async function () {
   await model.loadSearchResults(query);
 
   //4. Render results.
-  resultsView.render(model.state.search.results);
+  resultsView.render(model.getSearchResultsPage());
+
+  //Render initial pagination buttons.
+  paginationView.render(model.state.search);
+};
+
+const controlPagination = async function (goToPage) {
+  //Render the pagination buttons.
+  resultsView.render(model.getSearchResultsPage(goToPage));
+
+  //Render the recipes result.
+  paginationView.render(model.state.search);
 };
 
 //Publisher subscriber pattern.
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
   searchView.addHandlerSearch(controlSearchResults);
+  paginationView.addHandlerClick(controlPagination);
 };
 
 //subscribing to the hashchange and load events

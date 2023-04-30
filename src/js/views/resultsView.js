@@ -10,12 +10,7 @@ class resultsView extends View {
     'We could not find any results for this query, please try another one.';
   _message = '';
 
-  //Add event handler to the parent element
-  addHandlerRender(handler) {
-    ['hashchange', 'load'].forEach(e => window.addEventListener(e, handler));
-  }
-
-  //join all recipes markups.
+  //join all recipes
   _generateMarkup() {
     return this._data.map(res => this._generateMarkupPreview(res)).join('');
   }
