@@ -72,3 +72,11 @@ export const getSearchResultsPage = function (page = state.search.page) {
   //Return the page results.
   return state.search.results.slice(start, end);
 };
+
+//Update the Servings if buttons are clicked.
+export const updateServings = function (newServings) {
+  this.state.recipe.ingredients.forEach(ing => {
+    ing.quantity = (ing.quantity * newServings) / this.state.recipe.servings;
+  });
+  this.state.recipe.servings = newServings;
+};
