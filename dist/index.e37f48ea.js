@@ -585,6 +585,8 @@ const controlRecipes = async function() {
         if (!id) return;
         //Rendering the spinner
         (0, _recipeViewJsDefault.default).renderSpinner();
+        //0. Update results view to mark selected search result.
+        (0, _resultsViewJsDefault.default).update(_modelJs.getSearchResultsPage());
         //1. Loading recipe
         await _modelJs.loadRecipe(id);
         //2. Rendering recipe
@@ -617,7 +619,7 @@ const controlServings = function(newServings) {
     //Update the servings with the new servings.
     _modelJs.updateServings(newServings);
     //Rerender the recipe view.
-    (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
+    (0, _recipeViewJsDefault.default).update(_modelJs.state.recipe);
 };
 //Publisher subscriber pattern.
 const init = function() {
@@ -2581,6 +2583,7 @@ module.exports.Fraction = Fraction;
 //Importing icons:Parcel 2 way of importing images
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
+var _regeneratorRuntime = require("regenerator-runtime");
 var _iconsSvg = require("url:../../img/icons.svg");
 var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 class View {
@@ -2591,6 +2594,20 @@ class View {
         const markup = this._generateMarkup();
         this._clear();
         this._parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    update(data) {
+        this._data = data;
+        const newMarkup = this._generateMarkup();
+        const newDom = document.createRange().createContextualFragment(newMarkup);
+        const newElements = Array.from(newDom.querySelectorAll("*"));
+        const curElements = Array.from(this._parentElement.querySelectorAll("*"));
+        newElements.forEach((newEl, i)=>{
+            const curEl = curElements[i];
+            //Update changed text.
+            if (!newEl.isEqualNode(curEl) && newEl.firstChild?.nodeValue.trim() !== "") curEl.textContent = newEl.textContent;
+            //Update changed attribute.
+            if (!newEl.isEqualNode(curEl)) Array.from(newEl.attributes).forEach((attr)=>curEl.setAttribute(attr.name, attr.value));
+        });
     }
     //Render the error
     renderError(message = this._ErrorMessage) {
@@ -2637,7 +2654,7 @@ class View {
 }
 exports.default = View;
 
-},{"url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dXNgZ":[function(require,module,exports) {
+},{"url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","regenerator-runtime":"dXNgZ"}],"dXNgZ":[function(require,module,exports) {
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -3267,9 +3284,10 @@ class resultsView extends (0, _viewJsDefault.default) {
     }
     //Generating the markup for the recipe
     _generateMarkupPreview(data) {
+        const id = window.location.hash.slice(1);
         return `
     <li class="preview">
-        <a class="preview__link" href="#${data.id}">
+        <a class="preview__link ${id === data.id ? "preview__link--active" : ""}" href="#${data.id}">
             <figure class="preview__fig">
                 <img src="${data.image}" alt="${data.query} recipe image" />
             </figure>
