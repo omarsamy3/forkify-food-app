@@ -27,7 +27,7 @@ const controlRecipes = async function () {
     //Rendering the spinner
     recipeView.renderSpinner();
 
-    //0. Update results view to mark selected search result.
+    //0. Update results and bookmarks views.
     resultsView.update(model.getSearchResultsPage());
     bookmarksView.update(model.state.bookmarks);
 
@@ -92,8 +92,13 @@ const controlAddBookmark = function () {
   bookmarksView.render(model.state.bookmarks);
 };
 
+const controlBookmarks = function () {
+  bookmarksView.render(model.state.bookmarks);
+};
+
 //Publisher subscriber pattern.
 const init = function () {
+  bookmarksView.addHandlerRender(controlBookmarks);
   recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerUpdateServings(controlServings);
   searchView.addHandlerSearch(controlSearchResults);
