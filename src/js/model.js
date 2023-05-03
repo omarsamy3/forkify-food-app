@@ -13,6 +13,7 @@ export const state = {
     ressultsPerPage: RES_PER_PAGE,
     pagesNumbers: 1,
   },
+  bookmarks: [],
 };
 
 export const loadRecipe = async function (id) {
@@ -30,6 +31,10 @@ export const loadRecipe = async function (id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
+
+    //Check if bookmarked.
+    if (state.bookmarks.find(b => b.id == id)) state.recipe.bookmarked = true;
+    else state.recipe.bookmarked = false;
   } catch (err) {
     //Temp error handling
     throw err;
@@ -39,8 +44,13 @@ export const loadRecipe = async function (id) {
 //Load Search results
 export const loadSearchResults = async function (query) {
   try {
+    //Reset the page number.
+    state.search.page = 1;
+    //Set the query value.
     state.search.query = query;
+    //Get the data related to this query keyword.
     const { data } = await getJSON(`${API_URL}?search=${query}`);
+    //Fill the results array with the returned recipes.
     state.search.results = data.recipes.map(rec => {
       return {
         id: rec.id,
@@ -79,4 +89,31 @@ export const updateServings = function (newServings) {
     ing.quantity = (ing.quantity * newServings) / this.state.recipe.servings;
   });
   this.state.recipe.servings = newServings;
+};
+
+//Add a bookmark for a recipe.
+export const addBookmark = function (recipe) {
+  if (recipe.id === state.recipe.id) {
+    //Add bookmark.
+    state.recipe.bookmarked = true;
+    //Add the recipe to bookmark array.
+    state.bookmarks.push(recipe);
+  } else if (state.recipe.bookmarked) {
+    //remove bookmark.
+    state.recipe.bookmarked = false;
+    //remove the recipe to bookmark array.
+    state.bookmarks.splice(state.bookmarks.indexOf(recipe), 1);
+  }
+};
+
+//delete a bookmark for a recipe.
+export const deleteBookmark = function (id) {
+  //remove bookmark.
+  state.recipe.bookmarked = false;
+  //remove the recipe to bookmark array.
+  if (id === state.recipe.id)
+    state.bookmarks.splice(
+      state.bookmarks.findIndex(el => el.id == id),
+      1
+    );
 };
