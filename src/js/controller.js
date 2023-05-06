@@ -6,6 +6,7 @@ import searchView from './views/searchView.js';
 import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
 import bookmarksView from './views/bookmarksView.js';
+import addRecipeView from './views/addRecipeView.js';
 
 import 'core-js/stable'; // Polyfilling everything (to support older browsers)
 import 'regenerator-runtime/runtime'; // Polyfilling async await
@@ -96,6 +97,10 @@ const controlBookmarks = function () {
   bookmarksView.render(model.state.bookmarks);
 };
 
+const controlAddRecipe = function (data) {
+  console.log(data);
+};
+
 //Publisher subscriber pattern.
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
@@ -104,6 +109,7 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
   recipeView.addHandlerAddBookmark(controlAddBookmark);
+  addRecipeView.addHandlerUpload(controlAddRecipe);
 };
 
 //subscribing to different events.
