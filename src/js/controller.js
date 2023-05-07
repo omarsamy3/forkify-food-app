@@ -1,6 +1,10 @@
 //Import from model.js
 import * as model from './model.js';
-//Import from views/recipeView.js
+
+//Import from config.js
+import { MODAL_CLOSE_SEC } from './config.js';
+
+//Import from views
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
 import resultsView from './views/resultsView.js';
@@ -97,8 +101,33 @@ const controlBookmarks = function () {
   bookmarksView.render(model.state.bookmarks);
 };
 
-const controlAddRecipe = function (data) {
-  console.log(data);
+const controlAddRecipe = async function (newRecipe) {
+  try {
+    //Show loading spinner
+    addRecipeView.renderSpinner();
+
+    //Upload Recipe
+    await model.uploadRecipe(newRecipe);
+
+    //Render recipe
+    recipeView.render(model.state.recipe);
+
+    //Success Message
+    addRecipeView.renderMessage();
+
+    //Render bookmarks view
+    bookmarksView.render(model.state.bookmarks);
+
+    //Change ID in URL
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
+
+    //Close form window.
+    setTimeout(() => {
+      addRecipeView._toggleWindow();
+    }, MODAL_CLOSE_SEC * 1000);
+  } catch (err) {
+    addRecipeView.renderError(err.message);
+  }
 };
 
 //Publisher subscriber pattern.
