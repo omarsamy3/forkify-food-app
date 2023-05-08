@@ -91,6 +91,6 @@ export default class View {
 
   //Clearing the recipe text before rendering the spinner.
   _clear() {
-    this._parentElement.innerHTML = '';
+    this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 }
