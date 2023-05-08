@@ -48,6 +48,11 @@ export default class View {
     });
   }
 
+  //Clearing the recipe text before rendering the spinner.
+  _clear() {
+    this._parentElement.innerHTML = '';
+  }
+
   //Render the error
   renderError(message = this._ErrorMessage) {
     const markup = `<div class="error">
@@ -86,11 +91,6 @@ export default class View {
           </div>
             `;
     this._clear();
-    this._parentElement.insertAdjacentHTML('afterbegin', markup);
-  }
-
-  //Clearing the recipe text before rendering the spinner.
-  _clear() {
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 }
