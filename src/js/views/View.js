@@ -1,5 +1,3 @@
-//Importing icons:Parcel 2 way of importing images
-import { mark } from 'regenerator-runtime';
 import icons from 'url:../../img/icons.svg';
 
 //General View class.
