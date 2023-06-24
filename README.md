@@ -22,7 +22,7 @@ To run Forkify locally, you need to have [Node.js](https://nodejs.org/en/) insta
 
 ## Demo
 
-You can see a live demo of Forkify [here](https://forkify-demo.netlify.app/).
+You can see a live demo of Forkify [here](https://forkify-moradev.netlify.app/).
 
 ## License
 
